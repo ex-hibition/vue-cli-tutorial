@@ -1,28 +1,40 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <sampleHeader></sampleHeader>
+    <sampleHeader></sampleHeader>
+    <sampleHeader></sampleHeader>
+    <sampleHeader></sampleHeader>
+
+    <p v-if="msg.length > 0">{{ msg }}</p>
+    <p v-else>no text</p>
+    <input type="text" v-model="msg" />
+    <button v-on:click="clear()">clear</button>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import sampleHeader from "./components/SampleHeader";
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
+    sampleHeader
+  },
+  data() {
+    return {
+      msg: "hello world."
+    };
+  },
+  methods: {
+    clear() {
+      this.msg = "";
+    }
+  },
+  created() {
+    fetch(
+      "http://www.geonames.org/postalCodeLookupJSON?postalcode=10504&country=US"
+    )
+      .then(response => this.response = response.json())
+      .then(json => this.msg = json.postalcodes[0].adminName1);
   }
-}
+};
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
